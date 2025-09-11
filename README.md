@@ -38,10 +38,13 @@ An AI-powered music recommendation app that detects facial emotions using Comput
 - Improve model accuracy with augmentation.
 - Add user login & personalization.
 - Final testing, documentation, and deployment.
+## Setup Environment Variables
+1. Copy `.env.example` → `.env`
+2. Fill in your real secret values
+3. Never commit `.env` (it's ignored by git)
+
 
 ---
-
-## Team
 - **Chaturya Keerthi** (B.Tech IT, Shri Vishnu Engineering College for Women)
 
 ---
