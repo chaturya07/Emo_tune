@@ -1,10 +1,54 @@
-__pycache__/
-.ipynb_checkpoints/
-venv/
-node_modules/
-data/
-*.pyc
-*.pkl
-*.h5
-.env
-ml/models/
+# -----------------------
+# Python-specific ignores
+# -----------------------
+
+__pycache__/        # Compiled Python bytecode cache folders
+*.pyc              # Compiled Python files
+*.pkl              # Pickle files (often contain data or models)
+*.h5               # HDF5 files (Keras/TensorFlow saved models)
+
+# -----------------------
+# Jupyter Notebook stuff
+# -----------------------
+
+.ipynb_checkpoints/ # Auto-generated checkpoint folders
+
+# -----------------------
+# Virtual Environment
+# -----------------------
+
+venv/              # Local Python virtual environment (recreate on other machines)
+
+# -----------------------
+# Node / React
+# -----------------------
+
+node_modules/      # Installed npm packages (run npm install to recreate)
+
+# -----------------------
+# Data Files
+# -----------------------
+
+data/              # General data folder (ignored if you have one in root)
+ml/data/raw/*      # Ignore raw dataset files (too large for GitHub)
+!ml/data/raw/.gitkeep  # Keep folder structure
+
+ml/data/processed/*    # Ignore processed images too
+!ml/data/processed/.gitkeep  # Keep folder structure
+
+# -----------------------
+# Environment Variables
+# -----------------------
+
+.env              # Environment variable file (contains secrets, do NOT share)
+
+# -----------------------
+# Models
+# -----------------------
+
+ml/models/        # Trained model files (can be very large, store elsewhere)
+# Ignore all raw data
+ml/data/raw/*
+
+# But keep the folder itself
+!ml/data/raw/.gitkeep
