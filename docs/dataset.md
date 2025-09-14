@@ -64,3 +64,19 @@ We will use **6 classes** by merging "Disgust" into "Angry":
 ## Notes
 - Class distribution will be documented after preprocessing.
 - Any imbalances will be handled by augmentation or class weights during training.
+## Class Distribution (after preprocessing)
+| Emotion  | Count |
+|---------|------|
+| Angry   | TBD |
+| Fear    | TBD |
+| Happy   | TBD |
+| Sad     | TBD |
+| Surprise| TBD |
+| Neutral | TBD |
+
+> Will be updated after preprocessing is complete.
+### Tools Used
+- **Python 3.10+**
+- **Libraries:** NumPy, Pandas, OpenCV, scikit-learn
+- Preprocessing script will be stored in `ml/scripts/preprocess.py`
+
