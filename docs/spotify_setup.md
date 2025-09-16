@@ -28,11 +28,11 @@ We are using **Spotify Web API** with **Authorization Code Flow (with Refresh To
 Create a `.env` file at the **project root** (not inside `venv/`):
 
 ```env
-# Spotify API credentials
+## Spotify API credentials
 SPOTIFY_CLIENT_ID=your_client_id_here
 SPOTIFY_CLIENT_SECRET=your_client_secret_here
 
-# Redirect URI (must match exactly what you set in the Spotify Dashboard)
+## Redirect URI (must match exactly what you set in the Spotify Dashboard)
 SPOTIFY_REDIRECT_URI=http://localhost:8888/callback
 **Important:**
 
@@ -46,8 +46,8 @@ SPOTIFY_REDIRECT_URI=http://localhost:8888/callback
 - Exchange authorization code for:
   - **Access Token** (short-lived)
   - **Refresh Token** (long-lived)
-- Store tokens securely (never commit to GitHub).
-- Use refresh token to generate new access tokens automatically.
+- Store tokens securely (never commit to GitHub)
+- Use refresh token to generate new access tokens automatically
 
 ---
 
@@ -55,10 +55,10 @@ SPOTIFY_REDIRECT_URI=http://localhost:8888/callback
 
 If your Client Secret is ever exposed:
 
-1. Go to **Spotify Developer Dashboard → Your App**.
-2. Click **Regenerate Secret**.
-3. Update the `.env` file with the new secret.
-4. Restart backend or redeploy your app.
+1. Go to **Spotify Developer Dashboard → Your App**
+2. Click **Regenerate Secret**
+3. Update the `.env` file with the new secret
+4. Restart backend or redeploy your app
 
 ---
 
