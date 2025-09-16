@@ -24,10 +24,8 @@ We are using **Spotify Web API** with **Authorization Code Flow (with Refresh To
 ---
 
 ## 3. Environment Variables
+   Create a `.env` file at the **project root** (not inside `venv/`):```env
 
-Create a `.env` file at the **project root** (not inside `venv/`):
-
-```env
 ## Spotify API credentials
 SPOTIFY_CLIENT_ID=your_client_id_here
 SPOTIFY_CLIENT_SECRET=your_client_secret_here
