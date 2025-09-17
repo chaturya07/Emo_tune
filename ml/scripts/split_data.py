@@ -19,4 +19,4 @@ for emotion_folder in train_dir.iterdir():
         for img in images[:val_count]:
             shutil.move(str(img), val_dir / emotion_folder.name / img.name)
 
-print("✅ Validation split complete! 15% of training images moved to val/")
+print("Validation split complete! 15% of training images moved to val/")

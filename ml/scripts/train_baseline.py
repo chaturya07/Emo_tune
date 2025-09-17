@@ -122,7 +122,7 @@ def main(args):
     # Save final model
     final_model_path = model_dir / "baseline_final.h5"
     model.save(final_model_path)
-    print("✅ Training complete. Model saved to", final_model_path)
+    print("Training complete. Model saved to", final_model_path)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
