@@ -1,7 +1,7 @@
 import React, { useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { PlayCircle, Music2, Camera } from "lucide-react";
-import "./EmotionMusicApp.css"; // Import CSS file
+import "./EmotionMusicApp.css";
 
 export default function EmotionMusicApp() {
   const videoRef = useRef(null);
@@ -12,16 +12,14 @@ export default function EmotionMusicApp() {
     if (!cameraOn) {
       try {
         const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-        if (videoRef.current) {
-          videoRef.current.srcObject = stream;
-        }
+        if (videoRef.current) videoRef.current.srcObject = stream;
         setCameraOn(true);
       } catch (err) {
         console.error("Error accessing camera:", err);
       }
     } else {
       if (videoRef.current && videoRef.current.srcObject) {
-        videoRef.current.srcObject.getTracks().forEach((track) => track.stop());
+        videoRef.current.srcObject.getTracks().forEach(track => track.stop());
         videoRef.current.srcObject = null;
       }
       setCameraOn(false);
@@ -30,18 +28,16 @@ export default function EmotionMusicApp() {
 
   return (
     <div className="app-container">
-      {/* Header */}
       <motion.h1
         className="app-title"
         initial={{ opacity: 0, y: -30 }}
         animate={{ opacity: 1, y: 0 }}
       >
-        🎵 EmoTune – Feel the Music
+        EmoTune – Feel the Music
       </motion.h1>
 
-      {/* Grid Container */}
+      {/* Camera Card */}
       <div className="card-grid">
-        {/* Camera Card */}
         <motion.div className="glass-card" whileHover={{ scale: 1.05 }}>
           <h2 className="card-title">
             <Camera /> Live Camera
@@ -51,14 +47,15 @@ export default function EmotionMusicApp() {
             {cameraOn ? "Stop Camera" : "Start Camera"}
           </button>
         </motion.div>
+      </div>
 
-        {/* Emotion Card */}
+      {/* Emotion + Music Side by Side */}
+      <div className="side-by-side">
         <motion.div className="glass-card" whileHover={{ scale: 1.05 }}>
           <h2 className="card-title">Detected Emotion</h2>
           <p className="emotion-text">{emotion}</p>
         </motion.div>
 
-        {/* Music Player Card */}
         <motion.div className="glass-card" whileHover={{ scale: 1.05 }}>
           <h2 className="card-title">
             <Music2 /> Music Player
@@ -75,6 +72,35 @@ export default function EmotionMusicApp() {
           </button>
         </motion.div>
       </div>
+
+      <div className="footer">
+        &copy; 2025 EmoTune. All rights reserved. 
+      </div>
     </div>
   );
+  <div className="side-by-side">
+  {/* Emotion Card */}
+  <motion.div className="glass-card" whileHover={{ scale: 1.05 }}>
+    <h2 className="card-title">Detected Emotion</h2>
+    <p className="emotion-text">{emotion}</p>
+  </motion.div>
+
+  {/* Music Player Card */}
+  <motion.div className="glass-card" whileHover={{ scale: 1.05 }}>
+    <h2 className="card-title">
+      <Music2 /> Music Player
+    </h2>
+    <img
+      src="https://via.placeholder.com/200"
+      alt="Album Cover"
+      className="album-cover"
+    />
+    <p className="song-title">Song Title</p>
+    <p className="artist-name">Artist Name</p>
+    <button className="btn play-btn">
+      <PlayCircle /> Play Music
+    </button>
+  </motion.div>
+</div>
+
 }
