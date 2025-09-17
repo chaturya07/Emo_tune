@@ -46,7 +46,7 @@ ml/data/processed/*    # Ignore processed images too
 # Models
 # -----------------------
 
-ml/models/        # Trained model files (can be very large, store elsewhere)
+models/        # Trained model files (can be very large, store elsewhere)
 # Ignore all raw data
 ml/data/raw/*
 
@@ -54,7 +54,7 @@ ml/data/raw/*
 !ml/data/raw/.gitkeep
 .env
 # Already present but merge duplicates
-ml/models/        # Trained model files (HDF5, SavedModel, etc.)
+models/        # Trained model files (HDF5, SavedModel, etc.)
 logs/             # TensorBoard logs
 
 # Remove duplicates
