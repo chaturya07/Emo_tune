@@ -1,0 +1,11 @@
+fastapi
+uvicorn[standard]
+python-multipart
+python-dotenv
+opencv-python-headless
+tensorflow>=2.10
+numpy
+requests
+scikit-learn
+matplotlib
+pydantic

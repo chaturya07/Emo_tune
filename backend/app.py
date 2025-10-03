@@ -1,0 +1,32 @@
+from fastapi import FastAPI, UploadFile, File
+from utils import load_model, predict_emotion, get_recommendations
+from fastapi.middleware.cors import CORSMiddleware
+import uvicorn
+
+# Initialize FastAPI app
+app = FastAPI()
+
+# Allow frontend to call backend
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # change to your frontend URL for security
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# Load model once at startup
+model = load_model("ml/models/baseline_v1/baseline_final.h5")
+
+@app.post("/detect-emotion")
+async def detect_emotion(file: UploadFile = File(...)):
+    emotion = await predict_emotion(model, file)
+    return {"emotion": emotion}
+
+@app.get("/recommendations/{emotion}")
+async def recommendations(emotion: str):
+    songs = get_recommendations(emotion)
+    return {"emotion": emotion, "songs": songs}
+
+if __name__ == "__main__":
+    uvicorn.run("app:app", host="0.0.0.0", port=8000, reload=True)
