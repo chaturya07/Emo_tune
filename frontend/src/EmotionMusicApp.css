@@ -111,7 +111,7 @@ body {
   padding: 0.8rem 1.5rem;
   border: none;
   border-radius: 12px;
-  background: linear-gradient(to right, #ec4899, #db2777);
+  background: linear-gradient(to right, #0520b5, #1037c4);
   color: white;
   font-weight: 700;
   font-size: 1rem;
@@ -165,4 +165,16 @@ body {
     flex-direction: column;
     align-items: center;
   }
+}
+.song-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.song-item {
+  margin-bottom: 1rem;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 0.8rem;
+  border-radius: 10px;
 }
