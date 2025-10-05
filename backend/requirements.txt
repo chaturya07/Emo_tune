@@ -1,11 +1,41 @@
-fastapi
-uvicorn[standard]
-python-multipart
-python-dotenv
-opencv-python-headless
-tensorflow>=2.10
-numpy
-requests
-scikit-learn
-matplotlib
-pydantic
+# FastAPI server
+fastapi==0.95.2
+
+# ASGI server (recommended with standard extras)
+uvicorn[standard]==0.22.0
+
+# File upload form parsing for FastAPI (multipart)
+python-multipart==0.0.6
+
+# TensorFlow (CPU-only recommended on typical Windows dev machines to avoid GPU driver issues)
+# Use tensorflow-cpu to avoid GPU CUDA dependencies if you don't have matching GPU drivers.
+tensorflow-cpu==2.12.0
+
+# PyTorch - DeepFace may use Torch models; install CPU variant unless you have GPU/CUDA configured
+# You may prefer to install torch separately depending on your machine (see notes below)
+torch==2.2.0
+
+# OpenCV (headless for servers; use opencv-python if you need GUI)
+opencv-python-headless==4.8.0.76
+
+# Spotify Web API helper
+spotipy==2.22.0
+
+# Image utilities
+pillow==10.0.1
+numpy==1.25.2
+
+# HTTP requests
+requests==2.31.0
+
+# Optional niceties for faster JSON/internals
+python-dotenv==1.0.0
+
+# If you use scikit-learn or plotting in scripts:
+scikit-learn==1.3.2
+matplotlib==3.8.1
+
+# (Optional) for model saving/loading and extra utils:
+h5py==3.9.0
+
+# If you require ffmpeg operations later (audio/video), install ffmpeg separately on the system

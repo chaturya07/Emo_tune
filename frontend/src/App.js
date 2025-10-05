@@ -1,5 +1,13 @@
+import React, { useState } from "react";
 import EmotionMusicApp from "./EmotionMusicApp";
+import LoginPage from "./LoginPage";
 
-export default function App() {
-  return <EmotionMusicApp />;
+function App() {
+  const [user, setUser] = useState(null);
+  return user ? (
+    <EmotionMusicApp username={user} />
+  ) : (
+    <LoginPage onLogin={setUser} />
+  );
 }
+export default App;
