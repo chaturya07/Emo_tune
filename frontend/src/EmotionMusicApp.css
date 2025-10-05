@@ -1,180 +1,429 @@
-@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap");
-
+/* 🌈 Background Animation */
+@keyframes gradientMove {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
 body {
-  margin: 0;
+  background: linear-gradient(-45deg, #ffe1f2, #a8e7ff, #d3caff, #ffdde1);
+  background-size: 400% 400%;
+  animation: gradientMove 12s ease infinite;
   font-family: "Poppins", sans-serif;
-  background: linear-gradient(135deg, #f9a8d4, #ec4899, #831843);
-  color: white;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  color: #333;
 }
 
+/* 🌟 Fade In */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 🌟 Header Section */
 .app-container {
   text-align: center;
-  width: 100%;
-  padding: 2rem;
-  max-width: 1200px;
+  padding: 50px 20px;
+  animation: fadeInUp 1.2s ease;
 }
 
-.app-title {
-  font-size: 2.8rem;
-  font-weight: 800;
-  margin-bottom: 2rem;
-  color: #f0abfc; /* Solid pinkish color for better visibility */
-  text-shadow: 2px 2px 6px rgba(0,0,0,0.4); /* adds depth and contrast */
-}
-
-.card-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 2rem;
-  justify-items: center;
-  margin-bottom: 2rem;
-}
-
-.side-by-side {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 2rem;
-  width: 100%;
-}
-
-.glass-card {
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(20px);
-  border-radius: 1.5rem;
-  padding: 2rem 1.5rem;
-  width: 100%;
-  max-width: 400px;
-  text-align: center;
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.glass-card:hover {
-  transform: translateY(-5px) scale(1.02);
-  box-shadow: 0 16px 50px rgba(0, 0, 0, 0.6);
-}
-
-.card-title {
-  font-size: 1.5rem;
-  margin-bottom: 1.2rem;
-  display: flex;
-  justify-content: center;
-  gap: 0.5rem;
+h1 {
+  font-size: 3.5rem;
   font-weight: 700;
-  color: #ffe4f0;
-  text-shadow: 1px 1px 5px rgba(0,0,0,0.6);
+  color: #ff4d8c;
+  text-shadow: 0 3px 10px rgba(255, 0, 100, 0.2);
+  letter-spacing: 1px;
 }
 
-.camera-preview {
-  width: 100%;
-  border-radius: 1rem;
-  background: black;
-  aspect-ratio: 16/9;
-}
-
-.emotion-text {
-  font-size: 2rem;
-  font-weight: 700;
-  color: #ff77b7;
-  margin-top: 1rem;
-  text-shadow: 1px 1px 6px rgba(0,0,0,0.7);
-}
-
-.album-cover {
-  width: 100%;
-  border-radius: 1rem;
-  margin-bottom: 1rem;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
-}
-
-.song-title {
+.caption {
   font-size: 1.3rem;
-  font-weight: 700;
-  margin-bottom: 0.3rem;
-  color: #ffe4f0;
+  color: #555;
+  font-style: italic;
+  margin-top: -10px;
+  animation: fadeInUp 1.6s ease;
 }
 
-.artist-name {
-  font-size: 1rem;
-  color: #f9c0d3;
-  margin-bottom: 1rem;
+/* 🌸 Input Section (Upload + Webcam) */
+.input-section {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  flex-wrap: wrap;
+  margin-top: 40px;
+  animation: fadeInUp 1.8s ease;
 }
 
-.btn {
-  margin-top: 1rem;
-  padding: 0.8rem 1.5rem;
-  border: none;
-  border-radius: 12px;
-  background: linear-gradient(to right, #0520b5, #1037c4);
+/* 🎀 Upload Section */
+.upload-section {
+  background: linear-gradient(135deg, rgba(255,255,255,0.6), rgba(255,240,245,0.8));
+  backdrop-filter: blur(12px);
+  border-radius: 25px;
+  padding: 40px 25px;
+  width: 350px;
+  text-align: center;
+  box-shadow: 0 6px 25px rgba(255, 182, 193, 0.5);
+  transition: all 0.4s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.upload-section:hover {
+  transform: translateY(-8px) scale(1.03);
+  box-shadow: 0 10px 35px rgba(255, 105, 180, 0.6);
+}
+
+.upload-section h3 {
+  color: #ff4d8c;
+  font-size: 1.3rem;
+  margin-bottom: 10px;
+  font-weight: 600;
+}
+
+.upload-section p {
+  font-size: 0.95rem;
+  color: #555;
+  margin-bottom: 20px;
+  font-style: italic;
+}
+
+/* Upload input (hidden) */
+.upload-section input[type="file"] {
+  display: none;
+}
+
+/* Label looks like a glowing button */
+.custom-upload-label {
+  background: linear-gradient(135deg, #ff8cc6, #ffb2d9);
   color: white;
-  font-weight: 700;
-  font-size: 1rem;
+  padding: 12px 25px;
+  border-radius: 30px;
+  font-weight: 600;
   cursor: pointer;
-  transition: transform 0.2s ease, background 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 4px 15px rgba(255, 105, 180, 0.5);
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
 }
 
-.btn:hover {
-  transform: scale(1.08);
-  background: linear-gradient(to right, #db2777, #be185d);
-  box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+.custom-upload-label:hover {
+  background: linear-gradient(135deg, #ff4da6, #ff7cb4);
+  box-shadow: 0 6px 20px rgba(255, 105, 180, 0.7);
+  transform: scale(1.05);
+}
+
+.custom-upload-label svg {
+  width: 20px;
+  height: 20px;
+  fill: white;
+}
+
+/* 🌤 Webcam Section */
+.webcam-section {
+  background: linear-gradient(135deg, rgba(255,255,255,0.6), rgba(240,255,255,0.8));
+  backdrop-filter: blur(12px);
+  border-radius: 25px;
+  padding: 40px 25px;
+  width: 350px;
+  text-align: center;
+  box-shadow: 0 6px 25px rgba(173, 216, 230, 0.5);
+  transition: all 0.4s ease;
+}
+
+.webcam-section:hover {
+  transform: translateY(-8px) scale(1.03);
+  box-shadow: 0 10px 35px rgba(135, 206, 250, 0.6);
+}
+
+.webcam-section h3 {
+  color: #00b4ff;
+  font-size: 1.3rem;
+  margin-bottom: 10px;
+  font-weight: 600;
+}
+
+/* 💖 Buttons */
+button {
+  background: linear-gradient(135deg, #ff69b4, #ff94c2);
+  border: none;
+  color: white;
+  padding: 10px 25px;
+  margin-top: 12px;
+  border-radius: 30px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: 0 3px 12px rgba(255, 105, 180, 0.3);
+}
+
+button:hover {
+  background: linear-gradient(135deg, #ff4da6, #ff7cb4);
+  box-shadow: 0 4px 16px rgba(255, 105, 180, 0.5);
+}
+
+/* 💫 Result Section */
+.result-section {
+  margin-top: 50px;
+  animation: fadeInUp 2s ease;
+}
+
+.result-section img {
+  border-radius: 25px;
+  box-shadow: 0 6px 20px rgba(255, 182, 193, 0.6);
+}
+
+.result-section p {
+  font-size: 1.2rem;
+  margin-top: 15px;
+  color: #444;
+  font-weight: 500;
+}
+
+/* 🎵 Songs Section */
+.songs-section {
+  margin-top: 60px;
+  animation: fadeInUp 2.2s ease;
+}
+
+.songs-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 25px;
+  padding: 20px;
+}
+
+.song-card {
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  padding: 15px;
+  box-shadow: 0 6px 20px rgba(255, 182, 193, 0.4);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  transform: translateY(0);
+  animation: floatCard 5s ease-in-out infinite;
+}
+
+@keyframes floatCard {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+.song-card:hover {
+  transform: scale(1.03);
+  box-shadow: 0 10px 30px rgba(255, 105, 180, 0.6);
+}
+
+.song-info h4 {
+  margin: 5px 0;
+  color: #ff4d8c;
+  font-size: 1rem;
+}
+
+.song-info p {
+  color: #666;
+  font-size: 0.9rem;
 }
 
 .play-btn {
-  background: linear-gradient(to right, #f43f5e, #be185d);
+  background: #a8e7ff;
+  padding: 8px 16px;
+  border-radius: 20px;
+  text-decoration: none;
+  color: #333;
+  font-weight: bold;
+  display: inline-block;
+  margin-top: 5px;
+  transition: all 0.3s ease;
 }
 
 .play-btn:hover {
-  background: linear-gradient(to right, #e11d48, #9f1239);
-  box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+  background: #74d4ff;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
 
-.footer {
-  width: 100%;
+/* 🐼 Mickey Chatbot */
+.panda-icon {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
   text-align: center;
-  padding: 1rem 0;
+  cursor: pointer;
+  z-index: 999;
+  animation: fadeInUp 2.4s ease;
+}
+
+.panda-icon img {
+  width: 80px;
+  transition: transform 0.3s ease;
+}
+
+.panda-icon:hover img {
+  transform: scale(1.1) rotate(5deg);
+}
+
+.help-text {
+  background: white;
+  padding: 6px 10px;
+  border-radius: 15px;
+  margin-top: 5px;
   font-size: 0.9rem;
-  color: #ffe4f0;
-  border-top: 1px solid rgba(255, 255, 255, 0.3);
-  margin-top: 2rem;
+  color: #333;
+  font-weight: 500;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
 }
-/* ... previous styles remain unchanged ... */
-
-.side-by-side {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 2rem;
-  width: 100%;
+/* 💖 Mood Button Glow Effect */
+.mood-btn {
+  background: linear-gradient(135deg, #ffb6c1, #ffa3d7);
+  padding: 10px 20px;
+  border-radius: 30px;
+  text-decoration: none;
+  color: #fff;
+  font-weight: bold;
+  font-size: 0.95rem;
+  display: inline-block;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(255, 182, 193, 0.4);
+  animation: pulse 2s infinite;
 }
 
-/* Ensure cards share equal width side by side */
-.side-by-side .glass-card {
-  flex: 1 1 400px; /* grow, shrink, min width */
-  max-width: 450px;
+.mood-btn:hover {
+  transform: translateY(-2px) scale(1.05);
+  background: linear-gradient(135deg, #ff4d8c, #ff7cb4);
+  box-shadow: 0 6px 20px rgba(255, 105, 180, 0.5);
 }
 
-/* Responsive: stack on smaller screens */
-@media (max-width: 900px) {
-  .side-by-side {
-    flex-direction: column;
-    align-items: center;
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(255, 105, 180, 0.5);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(255, 105, 180, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(255, 105, 180, 0);
   }
 }
-.song-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
+
+/* ✨ Smooth Fade & Bounce */
+.fade-in {
+  animation: fadeIn 1.3s ease;
+}
+.fade-up {
+  animation: fadeInUp 1.5s ease;
+}
+.bounce {
+  animation: bounceIn 1.2s ease;
 }
 
-.song-item {
-  margin-bottom: 1rem;
-  background: rgba(255, 255, 255, 0.1);
-  padding: 0.8rem;
-  border-radius: 10px;
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes bounceIn {
+  0% { transform: scale(0.8); opacity: 0; }
+  60% { transform: scale(1.05); opacity: 1; }
+  100% { transform: scale(1); }
+}
+
+/* ✨ Shimmer Effect on Song Cards */
+.shimmer {
+  background: linear-gradient(110deg, rgba(255,255,255,0.3) 8%, rgba(255,255,255,0.6) 18%, rgba(255,255,255,0.3) 33%);
+  background-size: 200% 100%;
+  animation: shimmerMove 1.5s infinite;
+}
+
+@keyframes shimmerMove {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+.welcome-text {
+  text-align: center;
+  font-size: 1.8rem;
+  color: #ff9ac2;
+  margin-top: 20px;
+  animation: fadeIn 1.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+/* 🩵 Fix scrolling issue while keeping style intact */
+html, body {
+  height: 100%;
+  overflow-y: auto;
+  scroll-behavior: smooth;
+}
+
+/* Allow the app to expand as content grows */
+.app-container {
+  min-height: 100vh;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+html, body {
+  height: auto;
+  overflow-y: auto;
+  scroll-behavior: smooth;
+}
+
+.app-container {
+  min-height: 100vh;
+  overflow-y: auto;
+}
+.welcome-banner {
+  text-align: center;
+  color: #fff;
+  margin-bottom: 20px;
+  animation: fadeIn 1.5s ease;
+  font-family: "Poppins", sans-serif;
+}
+
+.welcome-banner h2 {
+  font-size: 1.8rem;
+  font-weight: 600;
+}
+
+.welcome-banner p {
+  font-size: 1rem;
+  opacity: 0.8;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
 }

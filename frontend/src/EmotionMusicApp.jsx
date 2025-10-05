@@ -1,137 +1,269 @@
-import React, { useRef, useState } from "react";
-import { motion } from "framer-motion";
-import { PlayCircle, Music2, Camera } from "lucide-react";
+import React, { useState, useRef, useEffect } from "react";
+import axios from "axios";
 import "./EmotionMusicApp.css";
+import Chatbot from "./Chatbot";
 
-export default function EmotionMusicApp() {
-  const videoRef = useRef(null);
-  const canvasRef = useRef(null);
+const YOUTUBE_API_KEY = "AIzaSyAGICvnnV1VHFBgujNS6YXc-y2af66EScM";
 
-  const [emotion, setEmotion] = useState("Neutral");
+function EmotionMusicApp() {
+  const [emotion, setEmotion] = useState(null);
+  const [confidence, setConfidence] = useState(null);
+  const [preview, setPreview] = useState(null);
   const [songs, setSongs] = useState([]);
-  const [cameraOn, setCameraOn] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [username, setUsername] = useState(""); // 👈 for welcome banner
+  const fileInputRef = useRef();
+  const videoRef = useRef();
+  const resultRef = useRef();
 
-  const BACKEND_URL = "http://127.0.0.1:8000"; // change to deployed backend later
-
-  // Toggle webcam on/off
-  const toggleCamera = async () => {
-    if (!cameraOn) {
+  // 🎥 Initialize webcam safely
+  useEffect(() => {
+    let stream;
+    const startCamera = async () => {
       try {
-        const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+        stream = await navigator.mediaDevices.getUserMedia({ video: true });
         if (videoRef.current) videoRef.current.srcObject = stream;
-        setCameraOn(true);
       } catch (err) {
-        console.error("Error accessing camera:", err);
+        console.error("Webcam error:", err);
       }
-    } else {
-      if (videoRef.current?.srcObject) {
-        videoRef.current.srcObject.getTracks().forEach(track => track.stop());
-        videoRef.current.srcObject = null;
+    };
+    startCamera();
+    return () => {
+      if (stream) {
+        stream.getTracks().forEach((track) => track.stop());
       }
-      setCameraOn(false);
+    };
+  }, []);
+
+  // 👋 Get username from localStorage
+  useEffect(() => {
+    const storedName = localStorage.getItem("username");
+    if (storedName) setUsername(storedName);
+  }, []);
+
+  // 🎵 Fetch songs from YouTube
+  const fetchSongs = async (emotion) => {
+    try {
+      const query = `${emotion} mood songs playlist`;
+      const searchRes = await axios.get("https://www.googleapis.com/youtube/v3/search", {
+        params: {
+          part: "snippet",
+          maxResults: 8,
+          q: query,
+          type: "video",
+          videoEmbeddable: "true",
+          key: YOUTUBE_API_KEY,
+        },
+      });
+
+      const videoIds = searchRes.data.items
+        .map((item) => item.id.videoId)
+        .filter(Boolean)
+        .join(",");
+
+      if (!videoIds) {
+        setSongs([
+          {
+            title: "Feel Good Songs Mix",
+            videoId: "d-diB65scQU",
+            channel: "YouTube Music",
+            thumbnail: "https://img.youtube.com/vi/d-diB65scQU/hqdefault.jpg",
+          },
+        ]);
+        return;
+      }
+
+      const detailsRes = await axios.get("https://www.googleapis.com/youtube/v3/videos", {
+        params: {
+          part: "snippet,contentDetails,status",
+          id: videoIds,
+          key: YOUTUBE_API_KEY,
+        },
+      });
+
+      const playableVideos = detailsRes.data.items
+        .filter((v) => v.status.embeddable && v.status.privacyStatus === "public")
+        .map((v) => ({
+          title: v.snippet.title,
+          videoId: v.id,
+          channel: v.snippet.channelTitle,
+          thumbnail: v.snippet.thumbnails?.high?.url,
+        }));
+
+      setSongs(
+        playableVideos.length > 0
+          ? playableVideos
+          : [
+              {
+                title: "Feel Good Songs Mix",
+                videoId: "d-diB65scQU",
+                channel: "YouTube Music",
+                thumbnail: "https://img.youtube.com/vi/d-diB65scQU/hqdefault.jpg",
+              },
+            ]
+      );
+    } catch (err) {
+      console.error("YouTube API Error:", err);
     }
   };
 
-  // Capture frame & send to backend
-  const captureAndDetect = async () => {
-    if (!videoRef.current) return;
-    const video = videoRef.current;
-    const canvas = canvasRef.current;
-    const context = canvas.getContext("2d");
+  const handleBackendResponse = (data) => {
+    setEmotion(data.emotion);
+    setConfidence((data.confidence * 100).toFixed(2));
+    fetchSongs(data.emotion);
 
-    // Draw current frame from video
+    setTimeout(() => {
+      resultRef.current?.scrollIntoView({ behavior: "smooth" });
+    }, 500);
+  };
+
+  const handleUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    setPreview(URL.createObjectURL(file));
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+      const res = await fetch("http://127.0.0.1:5000/predict", {
+        method: "POST",
+        body: formData,
+      });
+      const data = await res.json();
+      handleBackendResponse(data);
+    } catch (err) {
+      console.error("Backend error:", err);
+    }
+  };
+
+  const handleCapture = async () => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    const canvas = document.createElement("canvas");
     canvas.width = video.videoWidth;
     canvas.height = video.videoHeight;
-    context.drawImage(video, 0, 0, canvas.width, canvas.height);
+    const ctx = canvas.getContext("2d");
+    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
 
-    // Convert canvas to blob
     canvas.toBlob(async (blob) => {
-      const formData = new FormData();
-      formData.append("file", blob, "frame.jpg");
+      if (!blob) {
+        console.error("❌ Failed to capture image blob.");
+        return;
+      }
 
-      setLoading(true);
+      const imageURL = URL.createObjectURL(blob);
+      setPreview(imageURL);
+
+      const formData = new FormData();
+      formData.append("file", blob, "capture.jpg");
+
       try {
-        // Detect emotion
-        const res = await fetch(`${BACKEND_URL}/detect-emotion`, {
+        const res = await fetch("http://127.0.0.1:5000/predict", {
           method: "POST",
           body: formData,
         });
-        const data = await res.json();
-        setEmotion(data.emotion);
 
-        // Get songs
-        const recRes = await fetch(`${BACKEND_URL}/recommendations/${data.emotion}`);
-        const recData = await recRes.json();
-        setSongs(recData.songs);
+        if (!res.ok) throw new Error("Failed to get prediction");
+        const data = await res.json();
+        handleBackendResponse(data);
       } catch (err) {
-        console.error("Error detecting emotion:", err);
-        setEmotion("Error");
-        setSongs([]);
-      } finally {
-        setLoading(false);
+        console.error("Backend error:", err);
       }
     }, "image/jpeg");
   };
 
   return (
-    <div className="app-container">
-      <motion.h1
-        className="app-title"
-        initial={{ opacity: 0, y: -30 }}
-        animate={{ opacity: 1, y: 0 }}
-      >
-        EmoTune – Feel the Music
-      </motion.h1>
+    <div className="app-container fade-in">
+      {/* 👋 Welcome Banner */}
+      <div className="welcome-banner">
+        <h2>Welcome, {username || "Music Lover"}! 🎧</h2>
+        <p>Let’s find the rhythm of your emotions 💫</p>
+      </div>
 
-      {/* Camera Card */}
-      <div className="card-grid">
-        <motion.div className="glass-card" whileHover={{ scale: 1.05 }}>
-          <h2 className="card-title">
-            <Camera /> Live Camera
-          </h2>
-          <video ref={videoRef} autoPlay muted playsInline className="camera-preview"></video>
-          <canvas ref={canvasRef} style={{ display: "none" }}></canvas>
-          <div>
-            <button className="btn" onClick={toggleCamera}>
-              {cameraOn ? "Stop Camera" : "Start Camera"}
-            </button>
-            {cameraOn && (
-              <button className="btn" onClick={captureAndDetect} disabled={loading}>
-                {loading ? "Detecting..." : "Capture & Detect"}
-              </button>
-            )}
+      <h1 className="glow-text">🎵 Emo_Tune</h1>
+      <p className="caption">Feel the rhythm of your emotions 💞</p>
+
+      <div className="input-section">
+        {/* 💖 Upload Section */}
+        <div className="upload-section">
+          <h3>✨ Upload your vibe ✨</h3>
+          <p>Upload your selfie and let <b>Emo_Tune</b> feel your mood 🎭</p>
+
+          <label htmlFor="fileUpload" className="custom-upload-label">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+              <path d="M12 2a10 10 0 1 0 10 10A10.011 10.011 0 0 0 12 2Zm0 18a8 8 0 1 1 8-8 8.009 8.009 0 0 1-8 8ZM11 11V6h2v5h3l-4 4-4-4Z"/>
+            </svg>
+            Choose Image
+          </label>
+          <input
+            type="file"
+            id="fileUpload"
+            accept="image/*"
+            onChange={handleUpload}
+            ref={fileInputRef}
+          />
+        </div>
+
+        {/* 🎥 Webcam Section */}
+        <div className="webcam-section">
+          <h3>📷 Live Capture</h3>
+          <video autoPlay playsInline width="300" height="200" ref={videoRef}></video>
+          <button className="capture-btn" onClick={handleCapture}>📸 Capture Mood</button>
+        </div>
+      </div>
+
+      <div ref={resultRef}>
+        {preview && (
+          <div className="result-section bounce">
+            <h3>💫 Detected Emotion</h3>
+            <img src={preview} alt="Preview" width="200" />
+            <p>
+              <strong>{emotion}</strong> ({confidence}% confidence)
+            </p>
           </div>
-        </motion.div>
-      </div>
+        )}
 
-      {/* Emotion + Music */}
-      <div className="side-by-side">
-        <motion.div className="glass-card" whileHover={{ scale: 1.05 }}>
-          <h2 className="card-title">Detected Emotion</h2>
-          <p className="emotion-text">{emotion}</p>
-        </motion.div>
-
-        <motion.div className="glass-card" whileHover={{ scale: 1.05 }}>
-          <h2 className="card-title">
-            <Music2 /> Music Recommendations
-          </h2>
-          {songs.length > 0 ? (
-            <ul className="song-list">
-              {songs.map((song, idx) => (
-                <li key={idx} className="song-item">
-                  <p className="song-title">{song.name}</p>
-                  <p className="artist-name">{song.artist}</p>
-                </li>
+        {songs.length > 0 && (
+          <div className="songs-section fade-up">
+            <h3>🎶 Songs for your {emotion} mood</h3>
+            <div className="songs-grid">
+              {songs.map((song) => (
+                <div className="song-card shimmer" key={song.videoId}>
+                  <a
+                    href={`https://www.youtube.com/watch?v=${song.videoId}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <img
+                      src={song.thumbnail}
+                      alt={song.title}
+                      style={{ width: "100%", borderRadius: "10px", marginBottom: "8px" }}
+                    />
+                  </a>
+                  <div className="song-info">
+                    <h4>{song.title}</h4>
+                    <p>{song.channel}</p>
+                    <a
+                      href={`https://www.youtube.com/watch?v=${song.videoId}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="play-btn"
+                    >
+                      ▶️ Play on YouTube
+                    </a>
+                  </div>
+                </div>
               ))}
-            </ul>
-          ) : (
-            <p>No songs yet. Capture to detect!</p>
-          )}
-        </motion.div>
+            </div>
+          </div>
+        )}
       </div>
 
-      <div className="footer">&copy; 2025 EmoTune. All rights reserved.</div>
+      {/* 🐼 Mickey the Chatbot */}
+      <Chatbot />
     </div>
   );
 }
+
+export default EmotionMusicApp;
